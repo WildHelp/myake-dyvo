@@ -1,0 +1,25 @@
+/* М'яке диво від Яни — Premium 4.2: compact catalog cards.
+   Styles only: does not modify favorites, basket, checkout or Nova Poshta. */
+@media (max-width: 700px) {
+  #products.products { gap: 12px; align-items: stretch; }
+  #products .product { min-width: 0; border-radius: 22px; overflow: hidden; }
+  #products .picture img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; }
+  #products .details { padding: 12px 11px 13px; gap: 5px; min-width: 0; }
+  #products .details h3 { font-size: clamp(17px, 4.6vw, 22px); line-height: 1.2; margin: 5px 0 3px; overflow-wrap: anywhere; }
+  #products .details p { margin: 3px 0 9px; font-size: 13px; line-height: 1.4; }
+  #products .bottom { display: flex; flex-direction: column; align-items: stretch; gap: 9px; margin-top: auto; }
+  #products .price { font-size: 19px; font-weight: 800; line-height: 1.2; }
+  #products .add { width: 100%; min-height: 43px; padding: 9px 7px; border-radius: 14px; font-size: 14px; line-height: 1.2; white-space: normal; }
+  /* Existing detail buttons may have different class names across versions. */
+  #products .details .p3-more,
+  #products .details .p41-more,
+  #products .details [data-details],
+  #products .details [data-detail] { width: 100%; min-height: 40px; padding: 8px 6px; font-size: 13px; line-height: 1.2; border-radius: 14px; }
+}
+@media (max-width: 370px) {
+  #products.products { gap: 8px; }
+  #products .details { padding: 10px 8px; }
+  #products .details h3 { font-size: 16px; }
+  #products .price { font-size: 17px; }
+  #products .add { font-size: 13px; }
+}
