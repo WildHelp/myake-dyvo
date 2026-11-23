@@ -45,11 +45,53 @@
       </form>`;
 
     window.openDrawer('Оформлення замовлення', html, '');
-    document.getElementById('checkoutForm')
-      .addEventListener('submit', e => {
-        e.preventDefault();
-        document.getElementById('checkoutMessage').textContent =
-          'Форма готова. Безпечне надсилання замовлень ще налаштовується.';
-      });
-  };
+        document.getElementById('checkoutForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const button = form.querySelector('[type="submit"]');
+      const message = document.getElementById('checkoutMessage');
+      const items = window.getCheckoutItems?.() || [];
+
+      if (!items.length) {
+        message.textContent = 'Кошик порожній.';
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form));
+      const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+      button.disabled = true;
+      message.textContent = 'Зберігаємо замовлення...';
+
+      try {
+        const response = await fetch('https://voaadlzlmiyuxclfqmmi.supabase.co/rest/v1/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: 'sb_publishable_hQyblRY4450gbOKLoXDabQ_dnHyGgn2',
+            Authorization: 'Bearer sb_publishable_hQyblRY4450gbOKLoXDabQ_dnHyGgn2',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify({
+            customer_name: data.customer_name,
+            customer_phone: data.customer_phone,
+            city: data.city,
+            delivery_branch: data.delivery_branch,
+            payment_method: data.payment_method,
+            items,
+            total_amount: total,
+            status: 'new'
+          })
+        });
+
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        message.textContent = 'Замовлення прийнято! Дякуємо.';
+        form.reset();
+      } catch (error) {
+        message.textContent = 'Не вдалося зберегти замовлення. Спробуйте ще раз.';
+        console.error(error);
+      } finally {
+        button.disabled = false;
+      }
+    });
 })();
