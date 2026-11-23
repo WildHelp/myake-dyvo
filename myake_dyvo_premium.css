@@ -1,0 +1,62 @@
+/* М'яке диво від Яни — Premium 2.0. Додаткові стилі */
+:root{--ink:#503d49;--rose:#b87d94;--muted:#897b80;--line:#eadbd6;--bg:#fff9f2;--gold:#b99558}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{background:var(--bg);color:var(--ink)}
+.header{background:rgba(255,249,242,.96);border-bottom:1px solid #eadbd6;box-shadow:0 5px 20px rgba(80,61,73,.045)}
+.logo{letter-spacing:-.025em}
+.logo small{letter-spacing:.13em}
+.iconbtn{background:#fffdf9;border:1px solid #e7d8cc;box-shadow:0 2px 10px rgba(80,61,73,.05)}
+.iconbtn:focus-visible,.btn:focus-visible,.add:focus-visible,.filter:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.hero{padding:clamp(34px,5vw,65px) 0;background:linear-gradient(135deg,#fff9f2 0%,#f9e8ed 58%,#f7ebdc 100%)}
+.hero-grid{gap:clamp(18px,3vw,38px)}
+.eyebrow{color:#a77d45;letter-spacing:.15em}
+h1{font-size:clamp(38px,5.8vw,70px);line-height:1.07;letter-spacing:-.035em}
+h1 em{color:var(--rose)}
+.hero p,.about p{line-height:1.65}
+.hero-photo img{height:clamp(260px,35vw,410px);border-radius:32px 90px 32px 90px;box-shadow:0 18px 44px rgba(80,61,73,.13);border:3px solid #fff8f1}
+.btn,.add{transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.btn{border:1px solid #b99558;box-shadow:0 5px 14px rgba(80,61,73,.08)}
+.btn:hover,.add:hover{transform:translateY(-2px);box-shadow:0 9px 20px rgba(80,61,73,.16)}
+section{scroll-margin-top:105px}
+.section{padding:clamp(36px,5vw,60px) 0}
+h2{letter-spacing:-.025em}
+.filter{background:#fffdf9;border:1px solid #e7d8cc;transition:background .18s,border-color .18s}
+.filter.active{background:var(--ink);color:#fff;border-color:var(--gold)}
+.search{background:#fffdf9;border:1px solid #e7d8cc;box-shadow:0 3px 12px rgba(80,61,73,.035)}
+.products{gap:clamp(12px,2vw,22px)}
+.product{background:#fffdf9;border:1px solid #e9dbd1;border-radius:23px;box-shadow:0 9px 25px rgba(80,61,73,.07);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.product:hover{transform:translateY(-3px);border-color:#b99558;box-shadow:0 14px 30px rgba(80,61,73,.12)}
+.picture{background:#f7ece5}
+.picture img{transition:transform .3s ease}
+.product:hover .picture img{transform:scale(1.025)}
+.details{padding:clamp(13px,2vw,20px)}
+.tag{color:#a77d45;letter-spacing:.04em}
+.details h3{line-height:1.18}
+.price{color:var(--ink);font-weight:800}
+.add{background:var(--ink);color:white;border:1px solid var(--gold);border-radius:14px}
+.about{background:linear-gradient(135deg,#f8e8ed,#fff8ed)}
+.about img{box-shadow:0 15px 30px rgba(80,61,73,.09)}
+.drawer{background:#fffaf5}
+.drawer-head,.drawer-foot{background:#fffaf5}
+.drawer-body{background:#fffaf5}
+.footer{background:var(--ink)}
+@media(max-width:800px){
+ .head{min-height:70px;gap:8px}
+ .logo{font-size:clamp(21px,6vw,30px)}
+ .logo small{font-size:10px;letter-spacing:.1em}
+ .iconbtn{width:44px;height:44px;flex-shrink:0}
+ .hero{padding:30px 0 36px}
+ .hero-grid{gap:22px}
+ h1{font-size:clamp(38px,9vw,54px);margin:10px 0}
+ .hero p{font-size:16px;line-height:1.5;margin:15px 0}
+ .hero-photo img{height:clamp(245px,65vw,340px);border-radius:70px 70px 24px 24px}
+ .section{padding:38px 0}
+ .products{gap:12px}
+ .picture img{height:clamp(175px,43vw,250px)}
+ .details{padding:12px}
+ .details h3{font-size:clamp(18px,4.5vw,23px)}
+ .bottom{gap:8px}
+ .add{padding:10px 12px;font-size:13px}
+}
+@media(max-width:380px){.logo{font-size:20px}.iconbtn{width:40px;height:40px}.details{padding:10px}.add{padding:9px 10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn,.add,.product,.picture img{transition:none}}
