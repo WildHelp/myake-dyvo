@@ -277,6 +277,10 @@ setTimeout(() => button.textContent = "+ У кошик", 1500);
   }
 
   window.openCart = showCart;
+  window.clearCheckoutCart = () => {
+  basket = {};
+  save();
+};
 window.getCheckoutItems = () => products
   .filter(p => Number(basket[p.id] || 0) > 0)
   .map(p => ({
