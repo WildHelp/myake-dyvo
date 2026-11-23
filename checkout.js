@@ -248,7 +248,7 @@
           if (!form.isConnected || seq !== cityRequest) return;
 
           
-const matches = list.flatMap(item => item.Addresses || [])
+const matches = list.flatMap(item => item.Addresses || [item])
   .filter(item => item.Ref && (item.Present || item.Description));
 
 options(cities, matches,
