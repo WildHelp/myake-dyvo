@@ -1,0 +1,32 @@
+:root{--p4-rose:#a66a82;--p4-gold:#c7a46c;--p4-ink:#4b3543}
+body{background:#fffaf7}
+.header{box-shadow:0 4px 24px #5435480c}
+.hero{background:radial-gradient(circle at 85% 12%,#f7dce6 0,transparent 42%),linear-gradient(125deg,#fff9f1,#fff0f4)}
+.hero h1{letter-spacing:-.035em}
+.hero-photo img{box-shadow:0 22px 55px #7d4a6228;border:5px solid #fff}
+.products .product{border:1px solid #f0e1e3;box-shadow:0 12px 36px #67435812;transition:transform .2s,box-shadow .2s}
+.products .product:hover{transform:translateY(-4px);box-shadow:0 18px 44px #67435824}
+.products .picture{position:relative;overflow:hidden}
+.products .picture img{transition:transform .35s}
+.products .product:hover .picture img{transform:scale(1.04)}
+.products .details{gap:5px}
+.products .details h3{line-height:1.25}
+.products .price{color:#7d4b64;font-size:19px}
+.products .add,.p3-more,.btn{transition:filter .2s,transform .2s}
+.products .add:hover,.p3-more:hover,.btn:hover{filter:brightness(1.08)}
+.products .add:active,.btn:active{transform:scale(.98)}
+.p4-trust{padding:30px 0;background:#fff3f4;border-top:1px solid #f0dce2;border-bottom:1px solid #f0dce2}
+.p4-trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.p4-trust-item{background:white;padding:19px;border:1px solid #f0e0e4;border-radius:20px;text-align:center}
+.p4-trust-item strong{display:block;margin-bottom:5px;font:700 19px Georgia,serif}
+.p4-trust-item p{margin:0;color:#776872;font-size:13px}
+.p4-care{padding:42px 0}
+.p4-care details{border:1px solid #eadbe0;background:white;border-radius:16px;margin:10px 0;padding:15px 18px}
+.p4-care summary{cursor:pointer;font-weight:700}
+.p4-care p{color:#786b73;font-size:14px}
+.p4-back{position:fixed;right:18px;bottom:20px;z-index:12;border:1px solid #d4b37d;border-radius:50%;width:44px;height:44px;background:#fff;color:#66495b;box-shadow:0 8px 24px #51384728;display:none}
+.p4-back.visible{display:block}
+#copy-order{display:none!important}
+#drawerFoot>.btn:not(.light){display:block;width:100%;padding:16px;border-radius:17px;background:linear-gradient(120deg,#624458,#9b6982);border:1px solid #c7a46c;box-shadow:0 9px 23px #6c3f5626}
+@media(max-width:650px){.p4-trust-grid{grid-template-columns:1fr}.p4-trust-item{text-align:left}.hero{padding:28px 0}.products .price{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.products .product,.products .picture img{transition:none}}
