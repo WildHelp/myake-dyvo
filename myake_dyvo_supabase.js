@@ -302,18 +302,7 @@
 
       render();
 
-      const firstPhoto = products.find(
-        p => safeImg(p.image_url)
-      )?.image_url;
-
-      const hero = document.querySelector('.hero-photo img');
-      if (hero && firstPhoto) {
-        hero.src = firstPhoto;
-        hero.alt = 'В’язані іграшки Яни';
-      }
-
-      const about = document.querySelector('.about-grid img');
-      if (about && firstPhoto) about.src = firstPhoto;
+      
 
       const description =
         document.querySelector('#catalog .section-desc');
