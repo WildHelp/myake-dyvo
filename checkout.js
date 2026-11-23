@@ -95,4 +95,5 @@
         button.disabled = false;
       }
     });
+    };
 })();
