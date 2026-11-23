@@ -1,4 +1,3 @@
-
 /* М'яке диво від Яни — checkout with Nova Poshta */
 (() => {
   'use strict';
