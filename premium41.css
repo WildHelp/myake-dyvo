@@ -1,0 +1,49 @@
+/* М'яке диво від Яни — Premium 4.1, mobile-first, additive */
+:root{--p41-ink:#503b49;--p41-rose:#aa7188;--p41-gold:#bfa06c}
+body{background:#fffaf7}
+.header{background:#fffaf8f7;box-shadow:0 4px 20px #503b490d}
+.hero{background:radial-gradient(circle at 90% 5%,#f6dce5,transparent 50%),linear-gradient(145deg,#fffaf6,#fff0f3)}
+.hero-photo img{border:6px solid #fff;box-shadow:0 18px 45px #56394a1b}
+.product{box-shadow:0 10px 30px #62415410;transition:transform .2s,box-shadow .2s}
+.product .picture{overflow:hidden;aspect-ratio:1/1;background:#f8eef1}
+.product .picture img{height:100%;width:100%;object-fit:cover;transition:transform .3s}
+.product:hover .picture img{transform:scale(1.035)}
+.product .details{gap:6px}
+.product .price{font-weight:800;color:#80546a}
+.product .add{background:linear-gradient(120deg,#624659,#9c6c85);border:1px solid #bfa06c}
+.product .add:disabled{opacity:.55;cursor:not-allowed}
+.filter{transition:background .2s,border-color .2s}
+.filter.active{background:#624659;border-color:#624659}
+.search:focus{outline:2px solid #c99caf;outline-offset:2px}
+/* Premium 3 already has a similar benefits section; don't repeat it. */
+#p4-trust{display:none!important}
+.p4-care{background:#fff7f6}
+.p4-care details{box-shadow:0 4px 18px #54354808}
+.p41-menu-toggle{display:none}
+@media(max-width:700px){
+  .header .head{min-height:65px;gap:8px}
+  .header .logo{font-size:clamp(19px,5vw,26px);line-height:1.1}
+  .header .logo small{font-size:9px;letter-spacing:.7px;margin-top:5px}
+  .header .iconbtn{width:42px;height:42px;font-size:20px}
+  .p41-menu-toggle{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid #eadbd6;border-radius:50%;background:white;color:#503b49;font-size:23px;cursor:pointer;vertical-align:middle;margin-left:5px}
+  .p3-nav{display:none!important}
+  .p3-nav.p41-open{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:8px 20px 16px!important;background:#fffaf8!important;border-top:1px solid #eadbd6!important;max-height:60dvh;overflow:auto}
+  .p3-nav.p41-open a{display:block!important;text-align:left!important;padding:12px 8px!important;border-bottom:1px solid #f1e5e4!important;white-space:normal!important}
+  .hero{padding:30px 0}
+  .hero h1{font-size:clamp(35px,9vw,52px)}
+  .hero-photo img{height:290px;border-radius:110px 110px 22px 22px}
+  .section{padding:38px 0}
+  .products{gap:12px}
+  .product .details{padding:12px}
+  .product .details h3{font-size:18px;line-height:1.22}
+  .product .details p{font-size:12px;line-height:1.4}
+  .product .price{font-size:16px}
+  .product .add{font-size:13px;padding:10px 11px}
+  .product .picture img{height:100%}
+  .filters{flex-wrap:nowrap;overflow-x:auto;padding-bottom:7px;scrollbar-width:thin}
+  .filter{white-space:nowrap;flex:none}
+  #catalog{scroll-margin-top:85px}
+  #about,#p4-care{scroll-margin-top:85px}
+}
+@media(max-width:370px){.header .logo{font-size:18px}.header .iconbtn,.p41-menu-toggle{width:38px;height:38px}.product .bottom{align-items:stretch}.product .add{width:100%}}
+@media(prefers-reduced-motion:reduce){.product,.product .picture img{transition:none}}
