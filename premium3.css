@@ -1,0 +1,42 @@
+/* Myake Dyvo Premium 3.0 — additive styles, safe for existing cart/admin */
+:root{--gold:#b99558;--cream:#fff9f2;--pink:#f3dce4;--ink:#503d49}
+body{background:var(--cream)}
+.header{box-shadow:0 3px 24px #503d490c}
+.logo{letter-spacing:-.5px}
+.hero{background:radial-gradient(circle at 90% 5%,#f3dce4 0,transparent 44%),linear-gradient(130deg,#fffaf3,#fff1f2)}
+.hero h1{letter-spacing:-1.5px}
+.eyebrow{color:#9c793f}
+.btn,.add{transition:transform .18s,box-shadow .18s,background .18s;border:1px solid var(--gold)}
+.btn:hover,.add:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 18px #503d4920}
+.product{position:relative;border-color:#eddfd6;box-shadow:0 8px 25px #503d490d;transition:transform .2s,box-shadow .2s}
+.product:hover{transform:translateY(-3px);box-shadow:0 14px 30px #503d4918}
+.picture{position:relative;overflow:hidden;background:#f7efea}
+.picture img{aspect-ratio:1/1;height:auto!important;object-fit:cover;transition:transform .3s}
+.product:hover .picture img{transform:scale(1.025)}
+.price{color:#87602b;font-size:1.12rem}
+.details h3{line-height:1.25}
+.p3-badge{position:absolute;top:10px;left:10px;z-index:1;background:#fffaf1ed;color:#86652e;border:1px solid #dec79e;border-radius:30px;padding:4px 10px;font-size:11px;font-weight:700}
+.p3-fav{position:absolute;top:9px;right:9px;z-index:2;border:1px solid #eadbdc;background:#fffdf9ed;color:#b36e89;width:37px;height:37px;border-radius:50%;font-size:23px;line-height:1}
+.p3-fav[aria-pressed=true]{background:#f9dbe5;color:#9e375e}
+.p3-more{border:1px solid #d9b97d;background:#fffaf1;color:#75562b;border-radius:20px;padding:9px 12px;font-size:13px;cursor:pointer;margin-top:10px;width:100%}
+.p3-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0 18px}
+.p3-controls select,.p3-controls button{border:1px solid #e1cda8;background:white;color:var(--ink);border-radius:13px;padding:11px 13px;font:inherit}
+.p3-count{color:#877a78;font-size:13px;margin-left:auto}
+.p3-nav{display:flex;gap:12px;align-items:center;justify-content:center;padding:8px 0 11px;flex-wrap:wrap;font-size:13px}
+.p3-nav a{padding:6px 9px;border-radius:20px}
+.p3-nav a:hover{background:#f3dce4}
+.p3-info{background:#fff6ef;border-top:1px solid #eadbd6;padding:40px 0}
+.p3-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.p3-info-card{background:white;border:1px solid #eadbd6;border-radius:20px;padding:22px}
+.p3-info-card h3{font:700 23px Georgia,serif;margin:0 0 10px}
+.p3-info-card p{margin:0;color:#786c70}
+.p3-dialog{border:0;border-radius:25px;padding:0;max-width:min(650px,calc(100vw - 24px));width:100%;max-height:90dvh;box-shadow:0 25px 70px #30202960;background:#fffaf7;color:var(--ink)}
+.p3-dialog::backdrop{background:#291e267d}
+.p3-dialog-inner{padding:20px;overflow:auto;max-height:90dvh}
+.p3-dialog img{width:100%;max-height:360px;object-fit:contain;border-radius:16px;background:#f7eeee}
+.p3-dialog h2{font-size:30px}
+.p3-dialog-close{float:right;border:1px solid #e4cfae;border-radius:50%;width:38px;height:38px;background:white;font-size:22px}
+.p3-dialog-price{font-size:22px;font-weight:700;color:#87602b}
+.p3-note{font-size:13px;color:#82757a}
+@media(max-width:800px){.hero{padding:20px 0 26px}.hero-grid{gap:14px}.hero-photo img{height:190px!important;width:100%;object-fit:cover;border-radius:24px}.hero h1{font-size:clamp(31px,9vw,42px);margin:9px 0}.section{padding:35px 0}.p3-info-grid{grid-template-columns:1fr}.p3-nav{font-size:12px;gap:2px}.p3-controls select{width:100%}.product .details{padding:11px}.p3-more{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.product,.picture img,.btn,.add{transition:none!important}}
