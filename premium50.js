@@ -4,7 +4,7 @@
  const API='https://voaadlzlmiyuxclfqmmi.supabase.co';
  const KEY='sb_publishable_hQyblRY4450gbOKLoXDabQ_dnHyGgn2';
  const grid=document.getElementById('products'); if(!grid)return;
- const headers={apikey:KEY,Authorization:'Bearer '+KEY};
+ const headers={apikey:KEY};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const safe=s=>{try{const u=new URL(s);return u.protocol==='https:'?u.href:''}catch{return ''}};
  const meta=new Map();let rows=[];
