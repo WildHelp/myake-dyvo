@@ -335,9 +335,16 @@ options(cities, matches,
           throw new Error('Supabase HTTP ' + response.status);
         }
 
-        message.textContent =
-          '✓ Замовлення прийнято! Ми зв’яжемося з вами.';
-        form.reset();
+        window.clearCheckoutCart?.();
+
+window.closeDrawer?.();
+
+document.getElementById('catalog')
+  ?.scrollIntoView({ behavior: 'smooth' });
+
+alert('✓ Замовлення прийнято! Ми зв’яжемося з вами.');
+
+form.reset();
         cityRef = '';
         branchSelected = '';
         branchList = [];
