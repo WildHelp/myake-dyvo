@@ -277,7 +277,14 @@ setTimeout(() => button.textContent = "+ У кошик", 1500);
   }
 
   window.openCart = showCart;
-
+window.getCheckoutItems = () => products
+  .filter(p => Number(basket[p.id] || 0) > 0)
+  .map(p => ({
+    id: p.id,
+    name: p.name,
+    price: Number(p.price),
+    qty: Number(basket[p.id])
+  }));
   window.showFavorites = () => {
     category = 'Усі';
     render();
