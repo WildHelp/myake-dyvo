@@ -222,6 +222,7 @@ setTimeout(() => button.textContent = "+ У кошик", 1500);
       'Мій кошик',
       content,
       lines.length
+      <button class="btn" onclick="openCheckout()">Оформити замовлення</button> +
         ? '<button class="btn" id="copy-order">Скопіювати замовлення</button>'
         : '<button class="btn light" onclick="closeDrawer()">До каталогу</button>'
     );
