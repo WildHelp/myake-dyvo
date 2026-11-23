@@ -40,3 +40,6 @@ body{background:var(--cream)}
 .p3-note{font-size:13px;color:#82757a}
 @media(max-width:800px){.hero{padding:20px 0 26px}.hero-grid{gap:14px}.hero-photo img{height:190px!important;width:100%;object-fit:cover;border-radius:24px}.hero h1{font-size:clamp(31px,9vw,42px);margin:9px 0}.section{padding:35px 0}.p3-info-grid{grid-template-columns:1fr}.p3-nav{font-size:12px;gap:2px}.p3-controls select{width:100%}.product .details{padding:11px}.p3-more{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.product,.picture img,.btn,.add{transition:none!important}}
+#drawerFoot{display:flex;flex-direction:column;gap:12px}
+#drawerFoot .btn{display:block;width:100%;min-height:56px;border-radius:18px;background:linear-gradient(135deg,#503d49,#815c6e);color:#fff;border:1px solid #b99558;font-size:17px;font-weight:700;box-shadow:0 8px 20px #503d4926}
+#drawerFoot .btn.light{display:none!important}
