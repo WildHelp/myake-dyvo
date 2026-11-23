@@ -167,7 +167,7 @@ window.closeDrawer = function() {
         );
 
         save();
-        button.textContent = "Додано ✓"; setTimeout(() => button.textContent = "+ У кошик", 1500);
+        button.textContent = Number(basket[p.id]) >= Number(p.stock) ? "Більше немає в наявності" : "Додано ✓"; setTimeout(() => button.textContent = "+ У кошик", 1500);
       };
     });
 
