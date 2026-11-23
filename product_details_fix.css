@@ -1,0 +1,169 @@
+
+/* М'яке диво від Яни — Premium 4.7 */
+
+/* Вікно галереї */
+#yg-viewer {
+  padding: 12px !important;
+  overflow: hidden;
+}
+
+/* Прокручування вмісту */
+#yg-viewer .yg-stage {
+  width: 100%;
+  max-width: 700px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 64px 4px 28px;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+}
+
+/* Верхня панель */
+#yg-viewer .yg-top {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+/* Основне фото */
+#yg-viewer .yg-photo {
+  width: auto;
+  max-width: 100%;
+  max-height: 48vh;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+/* Лічильник */
+#yg-viewer .yg-counter {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 2px 0;
+}
+
+/* Мініатюри */
+#yg-viewer .yg-thumbs {
+  display: flex;
+  width: 100%;
+  min-height: 60px;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: 5px 8px;
+}
+
+#yg-viewer .yg-thumbs img {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Інформаційна картка */
+#yg-viewer #p46-info {
+  display: block;
+  width: 100%;
+  max-width: 620px;
+  height: auto;
+  min-height: 0;
+  margin: 4px auto 0;
+  padding: 20px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+/* Зберігаємо приховування картки */
+#yg-viewer #p46-info[hidden] {
+  display: none !important;
+}
+
+/* Назва */
+#p46-info h2 {
+  margin: 0 0 10px;
+  font-size: 23px;
+  line-height: 1.25;
+}
+
+/* Наявність */
+#p46-info .p46-stock {
+  margin: 8px 0 10px;
+}
+
+/* Опис */
+#p46-info .p46-description {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Ціна */
+#p46-info .p46-price {
+  margin: 14px 0;
+  font-size: 26px;
+  line-height: 1.2;
+}
+
+/* Кнопка */
+#p46-info .p46-add {
+  display: block;
+  width: 100%;
+  margin: 14px 0 0;
+  padding: 15px 12px;
+  min-height: 52px;
+  border-radius: 14px;
+}
+
+/* Повідомлення після додавання */
+#p46-info .p46-message {
+  margin: 6px 0 0;
+  min-height: 0;
+}
+
+#p46-info .p46-message:empty {
+  display: none;
+}
+
+/* Мобільні екрани */
+@media (max-width: 600px) {
+  #yg-viewer .yg-stage {
+    padding-top: 64px;
+    padding-bottom: 22px;
+    gap: 10px;
+  }
+
+  #yg-viewer .yg-photo {
+    max-height: 40vh;
+  }
+
+  #yg-viewer .yg-thumbs {
+    min-height: 54px;
+  }
+
+  #yg-viewer .yg-thumbs img {
+    width: 48px;
+    height: 48px;
+  }
+
+  #yg-viewer #p46-info {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  #p46-info h2 {
+    font-size: 21px;
+  }
+
+  #p46-info .p46-price {
+    font-size: 25px;
+  }
+}
