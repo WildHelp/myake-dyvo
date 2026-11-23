@@ -53,3 +53,50 @@
     font-size:13px!important;
   }
 }
+/* Premium 4.2 — симетричні картки */
+@media (max-width: 700px) {
+  #products.products {
+    align-items: stretch;
+  }
+
+  #products .product {
+    height: 100%;
+  }
+
+  #products .details {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1;
+  }
+
+  #products .details h3 {
+    min-height: 2.5em;
+    line-height: 1.25;
+    margin: 5px 0 !important;
+  }
+
+  #products .details > p {
+    min-height: 2.8em;
+    margin: 4px 0 8px !important;
+  }
+
+  #products .bottom {
+    margin-top: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  #products .price {
+    display: block;
+    min-height: 30px;
+  }
+
+  #products .add {
+    width: 100%;
+  }
+
+  #products .p3-more {
+    margin-top: 10px;
+  }
+}
