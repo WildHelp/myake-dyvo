@@ -167,7 +167,7 @@ window.closeDrawer = function() {
         );
 
         save();
-        showCart();
+        button.textContent = "Додано ✓"; setTimeout(() => button.textContent = "+ У кошик", 1500);
       };
     });
 
