@@ -53,4 +53,4 @@ async function saveProduct(e){e.preventDefault();const btn=$('saveBtn');btn.disa
   resetForm();setStatus('globalStatus','Товар успішно збережено.','ok');await loadProducts();setStatus('globalStatus','Товар успішно збережено.','ok');
 }catch(err){setStatus('formStatus',err.message,'error')}finally{btn.disabled=false}}
 async function deleteProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p||!confirm(`Видалити товар «${p.name}»? Цю дію не можна скасувати.`))return;try{const {data,error}=await db.from('products').delete().eq('id',id).select('id');if(error)throw error;if(!data?.length)throw new Error('Немає дозволу на видалення (RLS).');if(editingId===id)resetForm();await loadProducts();setStatus('globalStatus','Товар видалено. Фото у Storage залишається.','ok')}catch(err){setStatus('globalStatus','Помилка видалення: '+err.message,'error')}}
-</script><script src="admin_orders.js?v=1"></script><script src="admin_gallery.js?v=1"></script></body></html>
+</script><script src="admin_orders.js?v=1"></script><script src="admin_gallery.js?v=1"></script><script src="premium50_admin.js?v=1"></script></body></html>
