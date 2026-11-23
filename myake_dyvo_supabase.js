@@ -1,4 +1,19 @@
 
+window.openDrawer = function(title, body, foot = '') {
+  document.getElementById('drawerTitle').textContent = title;
+  document.getElementById('drawerBody').innerHTML = body;
+  document.getElementById('drawerFoot').innerHTML = foot;
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeDrawer = function() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
 /* М'яке диво від Яни — каталог Supabase */
 (() => {
   'use strict';
