@@ -248,20 +248,20 @@
 
           if (!form.isConnected || seq !== cityRequest) return;
 
-          const matches = list.filter(item =>
-            item.Ref && (item.Present || item.Description)
-          );
+          
+const matches = list.flatMap(item => item.Addresses || [])
+  .filter(item => item.Ref && (item.Present || item.Description));
 
-          options(cities, matches,
-            item => item.Present || item.Description,
-            item => {
-              cityRef = item.Ref;
-              city.value = item.Present || item.Description;
-              hide(cities);
-              cityHelp.textContent = '✓ Місто вибрано.';
-              loadBranches();
-            }
-          );
+options(cities, matches,
+  item => item.Present || item.Description,
+  item => {
+    cityRef = item.Ref;
+    city.value = item.Present || item.Description;
+    hide(cities);
+    cityHelp.textContent = '✓ Місто вибрано.';
+    loadBranches();
+  }
+);
 
           cityHelp.textContent = matches.length
             ? 'Натисніть на потрібне місто.'
