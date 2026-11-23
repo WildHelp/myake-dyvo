@@ -161,13 +161,15 @@ window.closeDrawer = function() {
         );
         if (!p) return;
 
-        basket[p.id] = Math.min(
-          Number(p.stock),
-          Number(basket[p.id] || 0) + 1
-        );
-
-        save();
-        button.textContent = Number(basket[p.id]) >= Number(p.stock) ? "Більше немає в наявності" : "Додано ✓"; setTimeout(() => button.textContent = "+ У кошик", 1500);
+        if (Number(basket[p.id] || 0) >= Number(p.stock)) {
+  button.textContent = "Більше немає в наявності";
+  setTimeout(() => button.textContent = "+ У кошик", 1500);
+  return;
+}
+basket[p.id] = Number(basket[p.id] || 0) + 1;
+save();
+button.textContent = "Додано ✓";
+setTimeout(() => button.textContent = "+ У кошик", 1500);
       };
     });
 
