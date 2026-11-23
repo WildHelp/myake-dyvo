@@ -4,7 +4,6 @@
   }[c]));
 
   window.openCheckout = function () {
-    alert("Функція оформлення запустилася");
     const drawer = document.getElementById('drawer');
     if (!drawer || typeof window.openDrawer !== 'function') {
       alert('Не вдалося відкрити оформлення замовлення.');
