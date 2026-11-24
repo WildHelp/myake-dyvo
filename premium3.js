@@ -37,7 +37,15 @@
   if(sort==='low')sorted.sort((a,b)=>getPrice(a)-getPrice(b));
   if(sort==='high')sorted.sort((a,b)=>getPrice(b)-getPrice(a));
   if(sort==='az')sorted.sort((a,b)=>(a.querySelector('h3')?.textContent||'').localeCompare(b.querySelector('h3')?.textContent||'','uk'));
-  for(const c of sorted){c.hidden=onlyFav&&!favorites.includes(getId(c));grid.append(c);}
+  for (const c of sorted) {
+  c.hidden = onlyFav && !favorites.includes(getId(c));
+}
+
+sorted.forEach((card, index) => {
+  if (grid.children[index] !== card) {
+    grid.insertBefore(card, grid.children[index] || null);
+  }
+});
   $('.p3-count',controls).textContent=`Показано: ${sorted.filter(c=>!c.hidden).length}`;
   $('#p3-onlyfav').setAttribute('aria-pressed',String(onlyFav));
   $('#p3-onlyfav').textContent=onlyFav?'♥ Показати всі':'♡ Лише обране';
