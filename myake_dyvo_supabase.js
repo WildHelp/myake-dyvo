@@ -160,16 +160,32 @@ window.closeDrawer = function() {
           item => String(item.id) === button.dataset.add
         );
         if (!p) return;
+const available = Math.max(0,
+  Number(p.stock) - Number(basket[p.id] || 0)
+);
 
-        if (Number(basket[p.id] || 0) >= Number(p.stock)) {
-  button.textContent = "Більше немає в наявності";
-  setTimeout(() => button.textContent = "+ У кошик", 1500);
+if (available <= 0) {
+  alert('Усі доступні одиниці цього товару вже у вашому кошику.');
   return;
 }
+
 basket[p.id] = Number(basket[p.id] || 0) + 1;
 save();
-button.textContent = "Додано ✓";
-setTimeout(() => button.textContent = "+ У кошик", 1500);
+
+const remaining = Math.max(0,
+  Number(p.stock) - Number(basket[p.id])
+);
+
+button.textContent = remaining > 0
+  ? 'Додано ✓ Залишилось: ' + remaining
+  : 'Усі доступні у кошику';
+
+setTimeout(() => {
+  button.textContent =
+    Number(basket[p.id] || 0) >= Number(p.stock)
+      ? 'Усі доступні у кошику'
+      : '+ У кошик';
+}, 2000);
       };
     });
 
