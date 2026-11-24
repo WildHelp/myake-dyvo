@@ -9,7 +9,7 @@
  const safe=s=>{try{const u=new URL(s);return u.protocol==='https:'?u.href:''}catch{return ''}};
  const meta=new Map();let rows=[];
  const dialog=document.createElement('dialog');dialog.className='p50-modal';document.body.append(dialog);
- async function fetchJSON(path,opts={}){const r=await fetch(API+'/rest/v1/'+path,{...opts,headers:{...headers,...(opts.headers||{})}});if(!r.ok)throw Error('Сервер: '+r.status);return r.status===204?[]:r.json()}
+ async function fetchJSON(path,opts={}){const r=await fetch(API+'/rest/v1/'+path,{...opts,headers:{...headers,...(opts.headers||{})}});if(!r.ok)throw Error('Сервер: '+r.status);const body=await r.text();return body.trim()?JSON.parse(body):[]}
  function money(v){return Number(v).toLocaleString('uk-UA')+' грн'}
  function specs(p){return [['Розмір',p.toy_size],['Матеріал',p.toy_material],['Наповнювач',p.toy_filling],['Догляд',p.toy_care],['Індивідуальне замовлення',p.toy_custom?'Можливе — уточніть у Яни':'']].filter(x=>x[1]).map(([k,v])=>'<div><strong>'+esc(k)+':</strong> '+esc(v)+'</div>').join('')}
  function enhance(){for(const card of grid.querySelectorAll('article.product')){const id=card.querySelector('[data-add]')?.dataset.add,p=meta.get(String(id));if(!p)continue;
