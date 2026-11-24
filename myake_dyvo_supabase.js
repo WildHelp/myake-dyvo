@@ -78,17 +78,37 @@ window.closeDrawer = function() {
   }
 
   function save() {
-    try {
-      localStorage.setItem(
-        'yana_live_cart',
-        JSON.stringify(basket)
-      );
-    } catch {}
+  try {
+    localStorage.setItem(
+      'yana_live_cart',
+      JSON.stringify(basket)
+    );
+  } catch {}
 
-    count.textContent = Object.values(basket)
-      .reduce((sum, qty) => sum + Number(qty || 0), 0);
+  count.textContent = Object.values(basket)
+    .reduce((sum, qty) => sum + Number(qty || 0), 0);
+
+  grid.querySelectorAll('[data-add]').forEach(button => {
+    const p = products.find(
+      item => String(item.id) === button.dataset.add
+    );
+
+    if (!p) return;
+
+    const stock = Math.max(0, Number(p.stock) || 0);
+    const qty = Number(basket[p.id] || 0);
+    const remaining = Math.max(0, stock - qty);
+
+    button.type = 'button';
+    button.disabled = remaining <= 0;
+
+    button.textContent = stock <= 0
+      ? 'Немає в наявності'
+      : remaining <= 0
+        ? 'Усі доступні у кошику'
+        : '+ У кошик';
+  });
   }
-
   function filteredProducts() {
     const query = search.value.trim().toLocaleLowerCase('uk');
 
