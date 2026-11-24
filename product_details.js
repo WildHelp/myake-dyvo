@@ -146,21 +146,35 @@
 
       $('p46-price').textContent = money(product.price);
 
-      const stock = Math.max(0, Number(product.stock) || 0);
-      const available = stock > 0;
+     const stock = Math.max(0, Number(product.stock) || 0);
 
-      $('p46-stock').textContent = available
-        ? '✓ У наявності · ' + stock + ' шт.'
-        : 'Немає в наявності';
+const cartQty = Number(
+  (window.getCheckoutItems?.() || [])
+    .find(item => String(item.id) === String(product.id))
+    ?.qty || 0
+);
 
-      $('p46-stock').style.color = available
-        ? '#287a51'
-        : '#a43e65';
+const remaining = Math.max(0, stock - cartQty);
+const available = remaining > 0;
 
-      $('p46-add').disabled = !available;
-      $('p46-add').textContent = available
-        ? '🛒 Додати в кошик'
-        : 'Немає в наявності';
+$('p46-stock').dataset.stock = stock;
+
+$('p46-stock').textContent = stock > 0
+  ? 'У наявності: ' + stock + ' шт. | У кошику: ' +
+    cartQty + ' | Доступно: ' + remaining + ' шт.'
+  : 'Немає в наявності';
+
+$('p46-stock').style.color = available
+  ? '#287a51'
+  : '#a43e65';
+
+$('p46-add').disabled = !available;
+
+$('p46-add').textContent = available
+  ? '🛒 Додати в кошик'
+  : stock > 0
+    ? 'Усі доступні у кошику'
+    : 'Немає в наявності';
 
       message('');
       panel.hidden = false;
@@ -249,13 +263,36 @@
         return;
       }
 
-      original.click();
+      const getQty = () => Number(
+  (window.getCheckoutItems?.() || [])
+    .find(item => String(item.id) === selectedId)
+    ?.qty || 0
+);
 
-      message(
-        original.textContent.includes('Додано')
-          ? '✓ Товар додано в кошик'
-          : 'Перевірте доступну кількість у кошику.'
-      );
+const before = getQty();
+
+original.click();
+
+const cartQty = getQty();
+const stock = Number($('p46-stock').dataset.stock || 0);
+const remaining = Math.max(0, stock - cartQty);
+
+$('p46-stock').textContent =
+  'У наявності: ' + stock + ' шт. | У кошику: ' +
+  cartQty + ' | Доступно: ' + remaining + ' шт.';
+
+$('p46-stock').style.color =
+  remaining > 0 ? '#287a51' : '#a43e65';
+
+$('p46-add').disabled = remaining <= 0;
+
+$('p46-add').textContent = remaining > 0
+  ? '🛒 Додати в кошик'
+  : 'Усі доступні у кошику';
+
+message(cartQty > before
+  ? '✓ Товар додано в кошик'
+  : 'Більше товару додати неможливо.');
     });
 
     const observer = new MutationObserver(() => {
