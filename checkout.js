@@ -532,7 +532,8 @@
             items,
             total_amount: getTotal(items),
             status: 'new',
-            promo_code: code || null
+            promo_code: code || null,
+comment: (data.comment || '').trim().slice(0, 500)
           })
         });
 
