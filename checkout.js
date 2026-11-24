@@ -1,10 +1,19 @@
-/* М'яке диво від Яни — checkout with Nova Poshta */
+
+/* М'яке диво від Яни — Premium 6.0 */
 (() => {
   'use strict';
 
   const API = 'https://myake-dyvo-novaposhta.dmitrywildreed.workers.dev/';
-  const SUPABASE = 'https://voaadlzlmiyuxclfqmmi.supabase.co/rest/v1/orders';
+  const BASE = 'https://voaadlzlmiyuxclfqmmi.supabase.co/rest/v1';
   const PUBLIC_KEY = 'sb_publishable_hQyblRY4450gbOKLoXDabQ_dnHyGgn2';
+
+  const headers = {
+    'Content-Type': 'application/json',
+    apikey: PUBLIC_KEY,
+    Authorization: 'Bearer ' + PUBLIC_KEY
+  };
+
+  const money = n => Number(n).toFixed(2) + ' грн';
 
   window.openCheckout = function () {
     if (!document.getElementById('drawer') ||
@@ -60,6 +69,33 @@
             placeholder="Побажання до замовлення"></textarea>
         </label>
 
+        <div class="np-promo">
+          <strong>🎁 Маєте промокод?</strong>
+          <div class="np-promo-row">
+            <input id="promoInput" maxlength="40"
+              autocomplete="off" placeholder="Введіть промокод">
+            <button id="promoApply" type="button">
+              Застосувати
+            </button>
+          </div>
+          <small id="promoMessage" role="status"></small>
+        </div>
+
+        <div class="np-summary">
+          <div>
+            <span>Вартість товарів</span>
+            <strong id="orderSubtotal">0 грн</strong>
+          </div>
+          <div class="np-discount">
+            <span>Ваша знижка</span>
+            <strong id="orderDiscount">0 грн</strong>
+          </div>
+          <div class="np-total">
+            <span>До сплати</span>
+            <strong id="orderTotal">0 грн</strong>
+          </div>
+        </div>
+
         <button type="submit" class="np-submit">
           Підтвердити замовлення
         </button>
@@ -82,12 +118,14 @@
           padding:15px;line-height:1.5;font-size:14px}
         .np-field{display:flex;flex-direction:column;gap:7px;
           font-size:14px;font-weight:600;min-width:0}
-        .np-field input,.np-field select,.np-field textarea{
+        .np-field input,.np-field select,.np-field textarea,
+        .np-promo input{
           box-sizing:border-box;width:100%;max-width:100%;
           padding:14px;border:1px solid #dfced7;border-radius:13px;
           background:#fff;color:#3e2d38;font:inherit;
           font-weight:400;outline:none}
-        .np-field input:focus,.np-field select:focus{
+        .np-field input:focus,.np-field select:focus,
+        .np-promo input:focus{
           border-color:#a86d89;box-shadow:0 0 0 3px #f4e2eb}
         .np-field input:disabled{background:#f5f1f3}
         .np-field small{font-size:12px;color:#786973}
@@ -105,6 +143,26 @@
           font-size:16px;font-weight:700}
         .np-submit:disabled{opacity:.6}
         #checkoutMessage{font-size:14px;line-height:1.5}
+        .np-promo{display:grid;gap:10px;padding:16px;
+          border:1px dashed #c79aaf;border-radius:16px;
+          background:#fff6fa;color:#523c4d}
+        .np-promo-row{display:flex;gap:8px}
+        .np-promo-row input{flex:1;min-width:0;
+          text-transform:uppercase}
+        .np-promo-row button{border:0;border-radius:12px;
+          padding:10px;background:#95617f;color:#fff;
+          font-size:12px;font-weight:700}
+        .np-promo-row button:disabled{opacity:.5}
+        #promoMessage{font-size:13px;line-height:1.5}
+        .np-summary{display:grid;gap:13px;padding:17px;
+          background:#f9eef3;border-radius:16px;
+          color:#523c4d}
+        .np-summary>div{display:flex;justify-content:space-between;
+          align-items:center;gap:10px;font-size:14px}
+        .np-summary .np-discount{color:#27834c}
+        .np-summary .np-total{border-top:1px solid #dfced7;
+          padding-top:14px;font-size:17px;font-weight:700}
+        #orderTotal{font-size:23px}
       `;
       document.head.append(style);
     }
@@ -117,6 +175,13 @@
     const branchHelp = form.querySelector('#np-branch-help');
     const message = form.querySelector('#checkoutMessage');
 
+    const promoInput = form.querySelector('#promoInput');
+    const promoApply = form.querySelector('#promoApply');
+    const promoMessage = form.querySelector('#promoMessage');
+    const subtotalEl = form.querySelector('#orderSubtotal');
+    const discountEl = form.querySelector('#orderDiscount');
+    const totalEl = form.querySelector('#orderTotal');
+
     let cityRef = '';
     let branchSelected = '';
     let branchList = [];
@@ -124,6 +189,109 @@
     let cityRequest = 0;
     let branchRequest = 0;
     let manualBranch = false;
+    let appliedPromo = null;
+    let promoRequest = 0;
+
+    const getItems = () => window.getCheckoutItems?.() || [];
+
+    const getTotal = items => items.reduce(
+      (sum, item) =>
+        sum + Number(item.price) * Number(item.qty), 0
+    );
+
+    const showTotals = () => {
+      const subtotal = appliedPromo
+        ? Number(appliedPromo.subtotal)
+        : getTotal(getItems());
+
+      const discount = appliedPromo
+        ? Number(appliedPromo.discount) : 0;
+
+      subtotalEl.textContent = money(subtotal);
+      discountEl.textContent = '−' + money(discount);
+      totalEl.textContent = money(subtotal - discount);
+    };
+
+    showTotals();
+
+    const checkPromo = async (code, items) => {
+      const response = await fetch(
+        BASE + '/rpc/check_shop_promo', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            p_code: code,
+            p_items: items
+          })
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.valid) {
+        throw new Error(
+          result.message || 'Промокод недійсний'
+        );
+      }
+
+      return result;
+    };
+
+    promoInput.addEventListener('input', () => {
+      ++promoRequest;
+      appliedPromo = null;
+      promoApply.disabled = false;
+      promoMessage.textContent = '';
+      showTotals();
+    });
+
+    promoApply.addEventListener('click', async () => {
+      const code = promoInput.value.trim().toUpperCase();
+      const items = getItems();
+
+      if (!code) {
+        promoMessage.textContent = 'Введіть промокод.';
+        return;
+      }
+
+      if (!items.length) {
+        promoMessage.textContent = 'Кошик порожній.';
+        return;
+      }
+
+      const seq = ++promoRequest;
+      appliedPromo = null;
+      showTotals();
+      promoApply.disabled = true;
+      promoMessage.style.color = '#786973';
+      promoMessage.textContent = 'Перевіряємо промокод…';
+
+      try {
+        const result = await checkPromo(code, items);
+
+        if (!form.isConnected || seq !== promoRequest) return;
+
+        appliedPromo = result;
+        promoInput.value = result.code;
+        promoMessage.style.color = '#27834c';
+        promoMessage.textContent =
+          '✓ Промокод застосовано! Економія: ' +
+          money(result.discount);
+
+        showTotals();
+      } catch (error) {
+        if (seq !== promoRequest) return;
+
+        appliedPromo = null;
+        promoMessage.style.color = '#b63b4b';
+        promoMessage.textContent = error.message;
+        showTotals();
+      } finally {
+        if (seq === promoRequest) {
+          promoApply.disabled = false;
+        }
+      }
+    });
 
     const hide = element => {
       element.hidden = true;
@@ -147,14 +315,19 @@
 
     const request = async params => {
       const url = new URL(API);
+
       for (const [key, value] of Object.entries(params)) {
         url.searchParams.set(key, value);
       }
 
       const response = await fetch(url);
-      if (!response.ok) throw new Error('HTTP ' + response.status);
+
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
 
       const result = await response.json();
+
       if (result.error) throw new Error(result.error);
 
       return Array.isArray(result.data) ? result.data : [];
@@ -168,12 +341,14 @@
           .toLocaleLowerCase('uk').includes(query)
       ).slice(0, 50);
 
-      options(branches, matches, item => item.Description, item => {
-        branch.value = item.Description;
-        branchSelected = item.Description;
-        hide(branches);
-        branchHelp.textContent = '✓ Відділення вибрано.';
-      });
+      options(branches, matches,
+        item => item.Description, item => {
+          branch.value = item.Description;
+          branchSelected = item.Description;
+          hide(branches);
+          branchHelp.textContent = '✓ Відділення вибрано.';
+        }
+      );
     };
 
     const loadBranches = async () => {
@@ -199,7 +374,9 @@
           return;
         }
 
-        branchHelp.textContent = 'Виберіть відділення зі списку.';
+        branchHelp.textContent =
+          'Виберіть відділення зі списку.';
+
         filterBranches();
       } catch (error) {
         if (seq !== branchRequest) return;
@@ -209,12 +386,13 @@
         branch.disabled = false;
         branch.placeholder = 'Введіть відділення вручну';
         branchHelp.textContent =
-          'Список недоступний. Можна ввести відділення вручну.';
+          'Список недоступний. Введіть відділення вручну.';
       }
     };
 
     city.addEventListener('input', () => {
       clearTimeout(timer);
+
       const seq = ++cityRequest;
       ++branchRequest;
 
@@ -247,24 +425,27 @@
 
           if (!form.isConnected || seq !== cityRequest) return;
 
-          
-const matches = list.flatMap(item => item.Addresses || [item])
-  .filter(item => item.Ref && (item.Present || item.Description));
+          const matches = list
+            .flatMap(item => item.Addresses || [item])
+            .filter(item =>
+              item.Ref && (item.Present || item.Description)
+            );
 
-options(cities, matches,
-  item => item.Present || item.Description,
-  item => {
-    cityRef = item.Ref;
-    city.value = item.Present || item.Description;
-    hide(cities);
-    cityHelp.textContent = '✓ Місто вибрано.';
-    loadBranches();
-  }
-);
+          options(cities, matches,
+            item => item.Present || item.Description,
+            item => {
+              cityRef = item.Ref;
+              city.value = item.Present || item.Description;
+              hide(cities);
+              cityHelp.textContent = '✓ Місто вибрано.';
+              loadBranches();
+            }
+          );
 
           cityHelp.textContent = matches.length
             ? 'Натисніть на потрібне місто.'
             : 'Місто не знайдено.';
+
         } catch (error) {
           if (seq !== cityRequest) return;
           console.error('City search:', error);
@@ -281,19 +462,24 @@ options(cities, matches,
     form.addEventListener('submit', async event => {
       event.preventDefault();
 
+      const button = form.querySelector('[type="submit"]');
+
+      if (button.disabled) return;
+
       if (!cityRef) {
         message.textContent = 'Виберіть місто зі списку.';
         city.focus();
         return;
       }
 
-      if (!manualBranch && !branchSelected) {
-        message.textContent = 'Виберіть відділення зі списку.';
-        branch.focus();
+      if (branch.disabled ||
+          !branch.value.trim() ||
+          (!manualBranch && !branchSelected)) {
+        message.textContent = 'Виберіть відділення.';
         return;
       }
 
-      const items = window.getCheckoutItems?.() || [];
+      const items = getItems();
 
       if (!items.length) {
         message.textContent = 'Кошик порожній.';
@@ -301,22 +487,40 @@ options(cities, matches,
       }
 
       const data = Object.fromEntries(new FormData(form));
-      const total = items.reduce(
-        (sum, item) =>
-          sum + Number(item.price) * Number(item.qty), 0
-      );
+      const code = promoInput.value.trim().toUpperCase();
 
-      const button = form.querySelector('[type="submit"]');
+      if (code && (!appliedPromo || appliedPromo.code !== code)) {
+        message.textContent =
+          'Спочатку застосуйте промокод або видаліть його.';
+        return;
+      }
+
       button.disabled = true;
+      promoInput.disabled = true;
+      promoApply.disabled = true;
       message.textContent = 'Зберігаємо замовлення…';
 
       try {
-        const response = await fetch(SUPABASE, {
+        if (code) {
+          const fresh = await checkPromo(code, items);
+
+          if (Number(fresh.total) !== Number(appliedPromo.total) ||
+              Number(fresh.discount) !== Number(appliedPromo.discount)) {
+            appliedPromo = fresh;
+            showTotals();
+            message.textContent =
+              'Сума змінилася. Перевірте її та підтвердьте замовлення.';
+            return;
+          }
+
+          appliedPromo = fresh;
+          showTotals();
+        }
+
+        const response = await fetch(BASE + '/orders', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-            apikey: PUBLIC_KEY,
-            Authorization: 'Bearer ' + PUBLIC_KEY,
+            ...headers,
             Prefer: 'return=minimal'
           },
           body: JSON.stringify({
@@ -326,38 +530,38 @@ options(cities, matches,
             delivery_branch: data.delivery_branch.trim(),
             payment_method: data.payment_method,
             items,
-            total_amount: total,
-            status: 'new'
+            total_amount: getTotal(items),
+            status: 'new',
+            promo_code: code || null
           })
         });
 
         if (!response.ok) {
-          throw new Error('Supabase HTTP ' + response.status);
+          const error = await response.json().catch(() => ({}));
+
+          throw new Error(
+            error.message || 'Помилка оформлення замовлення'
+          );
         }
 
         window.clearCheckoutCart?.();
+        window.closeDrawer?.();
 
-window.closeDrawer?.();
+        document.getElementById('catalog')
+          ?.scrollIntoView({ behavior: 'smooth' });
 
-document.getElementById('catalog')
-  ?.scrollIntoView({ behavior: 'smooth' });
+        alert('✓ Замовлення прийнято! Ми зв’яжемося з вами.');
 
-alert('✓ Замовлення прийнято! Ми зв’яжемося з вами.');
-
-form.reset();
-        cityRef = '';
-        branchSelected = '';
-        branchList = [];
-        branch.disabled = true;
-        hide(cities);
-        hide(branches);
       } catch (error) {
         console.error(error);
         message.textContent =
-          'Не вдалося зберегти замовлення. Спробуйте ще раз.';
+          'Не вдалося оформити замовлення: ' + error.message;
       } finally {
         button.disabled = false;
+        promoInput.disabled = false;
+        promoApply.disabled = false;
       }
     });
   };
 })();
+      
