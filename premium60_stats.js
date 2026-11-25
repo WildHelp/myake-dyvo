@@ -435,3 +435,116 @@
     init();
   }
 })();
+
+/* Premium 9.2 — Compact Statistics */
+(() => {
+  'use strict';
+
+  const style = document.createElement('style');
+
+  style.textContent = `
+    #p60-stats {
+      padding: 12px !important;
+      margin: 10px 0 !important;
+      border-radius: 14px !important;
+    }
+
+    #p60-stats h2 {
+      font-size: 20px !important;
+      margin: 0 0 12px !important;
+    }
+
+    #p60-stats h3 {
+      font-size: 16px !important;
+      margin: 16px 0 8px !important;
+    }
+
+    #p60-stats .p60-periods {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    #p60-stats .p60-periods button {
+      font-size: 11px;
+      padding: 8px 3px;
+      border-radius: 8px;
+    }
+
+    #p60-refresh {
+      grid-column: 1 / -1;
+    }
+
+    #p60-stats .p60-metrics {
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px;
+    }
+
+    #p60-stats .p60-metric {
+      padding: 9px 7px !important;
+      border-radius: 10px;
+    }
+
+    #p60-stats .p60-metric small {
+      font-size: 11px;
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+
+    #p60-stats .p60-metric strong {
+      font-size: 17px !important;
+      line-height: 1.2;
+    }
+
+    #p60-chart {
+      min-height: 165px;
+      gap: 5px;
+    }
+
+    #p60-chart:has(> p:only-child) {
+      min-height: 0 !important;
+      display: block;
+      padding: 0 !important;
+      overflow: visible;
+    }
+
+    #p60-chart p,
+    #p60-popular p,
+    #p60-lowstock p {
+      font-size: 13px;
+      color: #82757c;
+      margin: 6px 0;
+      padding: 10px;
+      background: #f5edf0;
+      border-radius: 8px;
+    }
+
+    #p60-stats .p60-line {
+      padding: 8px 0;
+      font-size: 13px;
+    }
+
+    #p60-stats .p60-progress {
+      height: 5px;
+    }
+
+    #p60-status {
+      font-size: 10px !important;
+      line-height: 1.4;
+      margin-top: 12px;
+    }
+
+    @media(max-width: 350px) {
+      #p60-stats .p60-metrics {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+
+      #p60-stats .p60-periods {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+    }
+  `;
+
+  document.head.append(style);
+})();
