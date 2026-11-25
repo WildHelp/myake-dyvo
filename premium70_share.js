@@ -1,4 +1,4 @@
-/* М'яке диво — Premium 7.1 SEO Share */
+/* М'яке диво — Premium 7.2 Compact SEO */
 (() => {
   'use strict';
 
@@ -12,14 +12,32 @@
     const css = document.createElement('style');
 
     css.textContent = `
-      .p70-share,
-      .p71-product-link {
+      .p71-title-link {
+        color:inherit;
+        font:inherit;
+        text-decoration:none;
+        cursor:pointer;
+      }
+
+      .p71-title-link:hover {
+        color:#a43e65;
+        text-decoration:underline;
+      }
+
+      .p71-title-link::after {
+        content:' ↗';
+        font-family:system-ui,sans-serif;
+        font-size:0.65em;
+        color:#a43e65;
+        vertical-align:super;
+      }
+
+      .p70-share {
         display:flex;
         align-items:center;
         justify-content:center;
         gap:8px;
         width:100%;
-        box-sizing:border-box;
         padding:12px;
         margin-top:10px;
         border:1px solid #e5c6d1;
@@ -29,16 +47,9 @@
         font-size:14px;
         font-weight:700;
         cursor:pointer;
-        text-decoration:none;
       }
 
-      .p71-product-link {
-        background:#fffaf6;
-        color:#503d49;
-      }
-
-      .p70-share:active,
-      .p71-product-link:active {
+      .p70-share:active {
         transform:scale(.97);
       }
 
@@ -65,6 +76,26 @@
     let toastTimer;
     let selectedId = null;
     let selectedName = '';
+
+    const knownPages = new Set();
+
+    fetch(BASE + 'sitemap.xml', {
+      cache: 'no-cache'
+    })
+      .then(response => {
+        if (!response.ok) throw new Error();
+        return response.text();
+      })
+      .then(xml => {
+        const doc = new DOMParser()
+          .parseFromString(xml, 'application/xml');
+
+        doc.querySelectorAll('loc')
+          .forEach(node => {
+            knownPages.add(node.textContent.trim());
+          });
+      })
+      .catch(() => {});
 
     const requestedId =
       new URLSearchParams(location.search)
@@ -109,23 +140,16 @@
       return url.href;
     }
 
-    async function availableUrl(id) {
+    function availableUrl(id) {
       const url = productUrl(id);
 
-      try {
-        const response = await fetch(url, {
-          method: 'HEAD',
-          cache: 'no-cache'
-        });
-
-        if (response.ok) return url;
-      } catch {}
-
-      return legacyUrl(id);
+      return knownPages.has(url)
+        ? url
+        : legacyUrl(id);
     }
 
     async function shareProduct(id, name) {
-      const url = await availableUrl(id);
+      const url = availableUrl(id);
 
       if (navigator.share) {
         try {
@@ -134,7 +158,9 @@
             text: 'Подивись цю іграшку ручної роботи ♡',
             url
           });
+
           return;
+
         } catch (error) {
           if (error.name === 'AbortError') return;
         }
@@ -143,6 +169,7 @@
       try {
         await navigator.clipboard.writeText(url);
         toast('✓ Посилання скопійовано');
+
       } catch {
         window.prompt(
           'Скопіюйте посилання на іграшку:',
@@ -167,19 +194,23 @@
       return button;
     }
 
-    function createProductLink(id, name) {
+    function createTitleLink(heading, id, name) {
+      if (!heading) return;
+
+      if (heading.querySelector('a')) return;
+
       const link = document.createElement('a');
 
-      link.className = 'p71-product-link';
+      link.className = 'p71-title-link';
       link.href = productUrl(id);
-      link.textContent = 'Сторінка іграшки';
+      link.textContent = name;
 
       link.setAttribute(
         'aria-label',
         'Сторінка товару: ' + name
       );
 
-      link.addEventListener('click', async event => {
+      link.addEventListener('click', event => {
         event.stopPropagation();
 
         if (
@@ -191,10 +222,10 @@
 
         event.preventDefault();
 
-        location.href = await availableUrl(id);
+        location.href = availableUrl(id);
       });
 
-      return link;
+      heading.replaceChildren(link);
     }
 
     function updateCards() {
@@ -202,6 +233,7 @@
         .forEach(card => {
           const add = card.querySelector('[data-add]');
           const details = card.querySelector('.details');
+          const heading = card.querySelector('h3');
 
           if (!add || !details) return;
 
@@ -210,14 +242,13 @@
           if (!/^[1-9]\d*$/.test(id)) return;
 
           const name =
-            card.querySelector('h3')?.textContent ||
+            heading?.textContent ||
             'В’язана іграшка';
 
-          if (!card.querySelector('.p71-product-link')) {
-            details.append(
-              createProductLink(id, name)
-            );
-          }
+          card.querySelectorAll('.p71-product-link')
+            .forEach(link => link.remove());
+
+          createTitleLink(heading, id, name);
 
           if (!card.querySelector('.p70-share')) {
             details.append(
@@ -260,6 +291,7 @@
         'В’язана іграшка';
 
       updateViewer();
+
     }, true);
 
     function openRequestedProduct() {
@@ -316,6 +348,7 @@
       setTimeout(() => {
         if (pendingId) {
           pendingId = null;
+
           toast(
             'Не вдалося відкрити іграшку. Перегляньте каталог.'
           );
