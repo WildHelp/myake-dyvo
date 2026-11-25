@@ -1,5 +1,4 @@
-
-/* М'яке диво — Premium 7.0 Share */
+/* М'яке диво — Premium 7.1 SEO Share */
 (() => {
   'use strict';
 
@@ -13,12 +12,14 @@
     const css = document.createElement('style');
 
     css.textContent = `
-      .p70-share {
+      .p70-share,
+      .p71-product-link {
         display:flex;
         align-items:center;
         justify-content:center;
         gap:8px;
         width:100%;
+        box-sizing:border-box;
         padding:12px;
         margin-top:10px;
         border:1px solid #e5c6d1;
@@ -28,9 +29,16 @@
         font-size:14px;
         font-weight:700;
         cursor:pointer;
+        text-decoration:none;
       }
 
-      .p70-share:active {
+      .p71-product-link {
+        background:#fffaf6;
+        color:#503d49;
+      }
+
+      .p70-share:active,
+      .p71-product-link:active {
         transform:scale(.97);
       }
 
@@ -88,13 +96,36 @@
     }
 
     function productUrl(id) {
+      if (!/^[1-9]\d*$/.test(String(id))) {
+        return BASE;
+      }
+
+      return BASE + 'products/' + id + '/';
+    }
+
+    function legacyUrl(id) {
       const url = new URL(BASE);
       url.searchParams.set('product', id);
       return url.href;
     }
 
-    async function shareProduct(id, name) {
+    async function availableUrl(id) {
       const url = productUrl(id);
+
+      try {
+        const response = await fetch(url, {
+          method: 'HEAD',
+          cache: 'no-cache'
+        });
+
+        if (response.ok) return url;
+      } catch {}
+
+      return legacyUrl(id);
+    }
+
+    async function shareProduct(id, name) {
+      const url = await availableUrl(id);
 
       if (navigator.share) {
         try {
@@ -136,6 +167,36 @@
       return button;
     }
 
+    function createProductLink(id, name) {
+      const link = document.createElement('a');
+
+      link.className = 'p71-product-link';
+      link.href = productUrl(id);
+      link.textContent = 'Сторінка іграшки';
+
+      link.setAttribute(
+        'aria-label',
+        'Сторінка товару: ' + name
+      );
+
+      link.addEventListener('click', async event => {
+        event.stopPropagation();
+
+        if (
+          event.ctrlKey ||
+          event.metaKey ||
+          event.shiftKey ||
+          event.altKey
+        ) return;
+
+        event.preventDefault();
+
+        location.href = await availableUrl(id);
+      });
+
+      return link;
+    }
+
     function updateCards() {
       grid.querySelectorAll('article.product')
         .forEach(card => {
@@ -144,14 +205,26 @@
 
           if (!add || !details) return;
 
+          const id = String(add.dataset.add);
+
+          if (!/^[1-9]\d*$/.test(id)) return;
+
+          const name =
+            card.querySelector('h3')?.textContent ||
+            'В’язана іграшка';
+
+          if (!card.querySelector('.p71-product-link')) {
+            details.append(
+              createProductLink(id, name)
+            );
+          }
+
           if (!card.querySelector('.p70-share')) {
-            details.append(createButton(() => {
-              shareProduct(
-                add.dataset.add,
-                card.querySelector('h3')
-                  ?.textContent || 'В’язана іграшка'
-              );
-            }));
+            details.append(
+              createButton(() => {
+                shareProduct(id, name);
+              })
+            );
           }
         });
     }
@@ -160,14 +233,15 @@
       const panel =
         document.getElementById('p46-info');
 
-      if (!panel ||
-          panel.querySelector('.p70-share')) return;
+      if (!panel || !selectedId) return;
 
-      panel.append(createButton(() => {
-        if (selectedId) {
-          shareProduct(selectedId, selectedName);
-        }
-      }));
+      if (!panel.querySelector('.p70-share')) {
+        panel.append(createButton(() => {
+          if (selectedId) {
+            shareProduct(selectedId, selectedName);
+          }
+        }));
+      }
     }
 
     grid.addEventListener('click', event => {
@@ -242,7 +316,9 @@
       setTimeout(() => {
         if (pendingId) {
           pendingId = null;
-          toast('Не вдалося відкрити іграшку. Перегляньте каталог.');
+          toast(
+            'Не вдалося відкрити іграшку. Перегляньте каталог.'
+          );
         }
       }, 20000);
     }
@@ -254,4 +330,3 @@
     init();
   }
 })();
-    
