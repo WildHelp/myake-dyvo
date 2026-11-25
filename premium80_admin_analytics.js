@@ -402,3 +402,133 @@
     init();
   }
 })();
+
+/* Premium 9.2 — Compact Analytics */
+(() => {
+  'use strict';
+
+  const style = document.createElement('style');
+
+  style.textContent = `
+    #p80-analytics {
+      margin: 10px 0 !important;
+      padding: 12px !important;
+      border-radius: 14px !important;
+    }
+
+    #p80-analytics h2 {
+      font-size: 20px !important;
+      margin: 0 0 5px !important;
+    }
+
+    #p80-analytics h3 {
+      font-size: 16px !important;
+      margin: 16px 0 8px !important;
+    }
+
+    #p80-analytics .p80-periods {
+      display: grid;
+      grid-template-columns: repeat(4,minmax(0,1fr));
+      gap: 5px;
+      margin: 12px 0;
+    }
+
+    #p80-analytics .p80-periods button {
+      font-size: 11px;
+      padding: 8px 3px;
+      border-radius: 8px;
+    }
+
+    #p80-analytics .p80-grid {
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 6px;
+    }
+
+    #p80-analytics .p80-stat {
+      padding: 9px 10px;
+      border-radius: 10px;
+    }
+
+    #p80-analytics .p80-stat span {
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    #p80-analytics .p80-stat strong {
+      font-size: 23px;
+      margin-top: 3px;
+      line-height: 1.3;
+    }
+
+    #p80-analytics .p80-chart {
+      height: 150px;
+      gap: 5px;
+      padding: 8px 0;
+      box-sizing: border-box;
+    }
+
+    #p80-chart:not(:has(.p80-column)) {
+      display: block;
+      height: auto;
+      min-height: 0;
+      background: #f5edf0;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      color: #82757c;
+    }
+
+    #p80-chart:empty {
+      display: none;
+    }
+
+    #p80-analytics .p80-column {
+      min-width: 30px;
+      max-width: 55px;
+    }
+
+    #p80-analytics .p80-product {
+      padding: 9px;
+      margin: 6px 0;
+      border-radius: 10px;
+    }
+
+    #p80-analytics .p80-product strong {
+      font-size: 13px;
+    }
+
+    #p80-analytics .p80-progress {
+      height: 5px;
+      margin: 6px 0;
+    }
+
+    #p80-analytics .p80-muted {
+      font-size: 11px;
+    }
+
+    #p80-refresh {
+      width: 100%;
+      background: #f3e5ec !important;
+      color: #75465e !important;
+      font-size: 12px;
+      padding: 9px !important;
+      border-radius: 8px !important;
+      margin-top: 10px;
+    }
+
+    #p80-status {
+      font-size: 10px !important;
+      margin-bottom: 0;
+      line-height: 1.4;
+    }
+
+    @media(max-width:350px) {
+      #p80-analytics .p80-periods {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+      }
+    }
+  `;
+
+  document.head.append(style);
+})();
+
