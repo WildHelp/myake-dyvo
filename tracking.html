@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>Моє замовлення — М’яке диво</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff5f7;
+  color: #45343b;
+}
+
+.container {
+  max-width: 580px;
+  margin: auto;
+  padding: 18px;
+}
+
+header {
+  text-align: center;
+  padding: 24px 0;
+}
+
+header h1 {
+  color: #a65075;
+  margin: 0 0 8px;
+}
+
+header p {
+  color: #8c7480;
+  font-size: 14px;
+}
+
+.card {
+  background: white;
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 5px 25px #a6507512;
+}
+
+h2 {
+  margin-top: 0;
+  font-size: 21px;
+}
+
+.status {
+  display: inline-block;
+  background: #fce4ee;
+  color: #a65075;
+  padding: 9px 14px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.details {
+  line-height: 1.8;
+  color: #78646e;
+}
+
+.offer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.offer-box {
+  background: #fff3f7;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.offer-box small {
+  display: block;
+  color: #8c7480;
+  margin-bottom: 8px;
+}
+
+.offer-box strong {
+  font-size: 22px;
+  color: #a65075;
+}
+
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.accept {
+  background: #a65075;
+  color: white;
+}
+
+.reject {
+  background: white;
+  color: #a65075;
+  border: 1px solid #e5b8cc;
+}
+
+.secondary {
+  background: #f8e5ee;
+  color: #a65075;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: #a99ba1;
+}
+
+.dot {
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  border: 2px solid #e5d5dc;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.step.done {
+  color: #45343b;
+}
+
+.step.done .dot {
+  background: #a65075;
+  border-color: #a65075;
+  color: white;
+}
+
+.step.current {
+  font-weight: bold;
+  color: #a65075;
+}
+
+.step.current .dot {
+  border-color: #a65075;
+}
+
+.notice {
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff3df;
+  color: #856019;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+.success {
+  background: #e9f7ed;
+  color: #267442;
+}
+
+.error {
+  background: #ffe9e9;
+  color: #a33b3b;
+}
+
+#customerMessage {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  color: #9b8791;
+  font-size: 12px;
+  padding: 20px 0;
+}
+
+a {
+  color: #a65075;
+  text-decoration: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<header>
+  <h1>♡ М’яке диво</h1>
+  <p>Індивідуальне замовлення від Яни</p>
+</header>
+
+<div id="loading" class="card">
+  Завантажуємо ваше замовлення...
+</div>
+
+<div id="error" class="card error" hidden></div>
+
+<main id="content" hidden>
+
+  <section class="card">
+    <h2 id="productName"></h2>
+    <span id="status" class="status"></span>
+    <div class="details">
+      <div id="orderDate"></div>
+      <div id="color"></div>
+      <div id="size"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Ваша пропозиція</h2>
+
+    <div class="offer">
+      <div class="offer-box">
+        <small>Вартість</small>
+        <strong id="price">—</strong>
+      </div>
+
+      <div class="offer-box">
+        <small>Виготовлення</small>
+        <strong id="days">—</strong>
+      </div>
+    </div>
+
+    <div id="decision" class="notice"></div>
+
+    <div id="actions" hidden>
+      <button id="accept" class="accept">
+        Погодитися з пропозицією
+      </button>
+
+      <button id="reject" class="reject">
+        Відхилити пропозицію
+      </button>
+    </div>
+  </section>
+
+  <section id="messageCard" class="card" hidden>
+    <h2>Повідомлення від Яни</h2>
+    <div id="customerMessage"></div>
+  </section>
+
+  <section class="card">
+    <h2>Етапи замовлення</h2>
+    <div id="timeline"></div>
+  </section>
+
+  <section class="card">
+    <button id="refresh" class="secondary">
+      ↻ Оновити інформацію
+    </button>
+
+    <button id="copyLink" class="secondary">
+      Зберегти посилання
+    </button>
+
+    <div id="feedback" class="notice" hidden></div>
+
+    <p style="font-size:12px;color:#8c7480;text-align:center">
+      Інформація оновлюється кожні 30 секунд.
+      Не передавайте це посилання стороннім.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <a href="./">← Повернутися до магазину</a>
+  <p>М’яке диво від Яни ♡</p>
+</footer>
+
+</div>
+
+<script>
+(() => {
+  const BASE =
+    'https://voaadlzlmiyuxclfqmmi.supabase.co';
+
+  const KEY =
+    'sb_publishable_hQyblRY4450gbOKLoXDabQ_dnHyGgn2';
+
+  const token =
+    new URLSearchParams(location.hash.slice(1)).get('token')
+    || new URLSearchParams(location.search).get('token');
+
+  const $ = id => document.getElementById(id);
+
+  const statuses = {
+    new: 'Заявку отримано',
+    confirmed: 'Заявку підтверджено',
+    in_progress: 'Виготовляється',
+    ready: 'Іграшка готова',
+    shipped: 'Відправлено',
+    completed: 'Замовлення виконано',
+    cancelled: 'Замовлення скасовано'
+  };
+
+  const steps = [
+    'new',
+    'confirmed',
+    'in_progress',
+    'ready',
+    'shipped',
+    'completed'
+  ];
+
+  let order = null;
+  let busy = false;
+  let loading = false;
+
+  async function rpc(name, data) {
+    const response = await fetch(
+      BASE + '/rest/v1/rpc/' + name,
+      {
+        method: 'POST',
+        cache: 'no-store',
+        headers: {
+          apikey: KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        result.message || 'Помилка сервера'
+      );
+    }
+
+    return result;
+  }
+
+  function showError(message) {
+    $('loading').hidden = true;
+    $('content').hidden = true;
+    $('error').hidden = false;
+    $('error').textContent = message;
+  }
+
+  function feedback(message, success = false) {
+    $('feedback').hidden = false;
+    $('feedback').className =
+      'notice' + (success ? ' success' : '');
+
+    $('feedback').textContent = message;
+  }
+
+  function render() {
+    if (!order) return;
+
+    $('loading').hidden = true;
+    $('error').hidden = true;
+    $('content').hidden = false;
+
+    $('productName').textContent =
+      order.product_name || 'Індивідуальна іграшка';
+
+    $('status').textContent =
+      statuses[order.status] || 'Обробляється';
+
+    $('orderDate').textContent =
+      'Дата заявки: ' +
+      new Date(order.created_at)
+        .toLocaleDateString('uk-UA', {
+          timeZone: 'Europe/Kyiv'
+        });
+
+    $('color').textContent =
+      'Колір: ' + (order.desired_color || 'Не вказано');
+
+    $('size').textContent =
+      'Розмір: ' + (order.desired_size || 'Не вказано');
+
+    $('price').textContent =
+      order.agreed_price == null
+        ? '—'
+        : Number(order.agreed_price)
+            .toLocaleString('uk-UA') + ' грн';
+
+    $('days').textContent =
+      order.production_days == null
+        ? '—'
+        : order.production_days + ' дн.';
+
+    $('messageCard').hidden =
+      !order.customer_message;
+
+    $('customerMessage').textContent =
+      order.customer_message || '';
+
+    const ready =
+      order.agreed_price != null &&
+      Number(order.production_days) > 0 &&
+      order.status === 'confirmed';
+
+    $('decision').className = 'notice';
+    $('actions').hidden = true;
+
+    if (order.status === 'cancelled') {
+      $('decision').textContent =
+        'Замовлення скасовано.';
+      $('decision').classList.add('error');
+
+    } else if (order.customer_decision === 'accepted') {
+      $('decision').textContent =
+        '✓ Ви погодили запропоновані умови.';
+      $('decision').classList.add('success');
+
+    } else if (order.customer_decision === 'rejected') {
+      $('decision').textContent =
+        'Ви відхилили пропозицію. Очікуйте зв’язку з Яною.';
+
+    } else if (ready) {
+      $('decision').textContent =
+        'Яна підготувала пропозицію. Підтвердьте або відхиліть умови.';
+
+      $('actions').hidden = false;
+
+    } else {
+      $('decision').textContent =
+        'Очікуємо пропозицію або уточнення від Яни.';
+    }
+
+    $('accept').disabled = busy || loading;
+    $('reject').disabled = busy || loading;
+
+    const timeline = $('timeline');
+    timeline.replaceChildren();
+
+    if (order.status === 'cancelled') {
+      const cancelled = document.createElement('div');
+      cancelled.className = 'notice error';
+      cancelled.textContent = 'Замовлення скасовано';
+      timeline.append(cancelled);
+      return;
+    }
+
+    const current = steps.indexOf(order.status);
+
+    steps.forEach((step, index) => {
+      const row = document.createElement('div');
+      row.className = 'step';
+
+      if (index < current) row.classList.add('done');
+      if (index === current) row.classList.add('current');
+
+      const dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.textContent =
+        index < current ? '✓' : String(index + 1);
+
+      const label = document.createElement('span');
+      label.textContent = statuses[step];
+
+      row.append(dot, label);
+      timeline.append(row);
+    });
+  }
+
+  async function load() {
+    if (busy || loading) return;
+
+    loading = true;
+    $('accept').disabled = true;
+    $('reject').disabled = true;
+
+    try {
+      const result = await rpc(
+        'get_custom_order_tracking',
+        { p_token: token }
+      );
+
+      if (!result) {
+        order = null;
+        showError('Замовлення не знайдено.');
+        return;
+      }
+
+      order = result;
+
+    } catch (error) {
+      if (order) {
+        feedback('Не вдалося оновити дані. Спробуйте ще раз.');
+      } else {
+        showError('Не вдалося завантажити замовлення.');
+      }
+
+    } finally {
+      loading = false;
+      if (order) render();
+    }
+  }
+
+  async function decide(value) {
+    if (busy || loading || !order) return;
+
+    const message = value === 'accepted'
+      ? 'Погодитися з ціною та терміном виготовлення?'
+      : 'Відхилити запропоновані умови?';
+
+    if (!confirm(message)) return;
+
+    busy = true;
+    render();
+
+    try {
+      order = await rpc('decide_custom_order', {
+        p_token: token,
+        p_version: order.proposal_version,
+        p_decision: value
+      });
+
+      feedback('Ваше рішення збережено.', true);
+
+    } catch (error) {
+      feedback(
+        'Не вдалося зберегти рішення. Перевірте актуальні умови.'
+      );
+
+    } finally {
+      busy = false;
+      render();
+      await load();
+    }
+  }
+
+  $('accept').onclick = () => decide('accepted');
+  $('reject').onclick = () => decide('rejected');
+  $('refresh').onclick = load;
+
+  $('copyLink').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      feedback('Посилання скопійовано. Збережіть його.', true);
+    } catch {
+      prompt('Скопіюйте та збережіть посилання:', location.href);
+    }
+  };
+
+  if (!token || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) {
+    showError('Відкрийте персональне посилання вашого замовлення.');
+    return;
+  }
+
+  history.replaceState(
+    null,
+    '',
+    location.pathname + '#token=' + encodeURIComponent(token)
+  );
+
+  load();
+
+  setInterval(() => {
+    if (!document.hidden) load();
+  }, 30000);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) load();
+  });
+})();
+</script>
+
+</body>
+  </html>
+  
