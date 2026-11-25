@@ -191,7 +191,7 @@
     }
 
     async function load() {
-      if (panel.hidden) return;
+      if (panel.hidden || panel.classList.contains('hidden')) return;
 
       const current = ++requestId;
 
@@ -220,7 +220,7 @@
           const {data,error} = await query.range(offset,offset+499);
 
           if (error) throw error;
-          if (current !== requestId || panel.hidden) return;
+          if (current !== requestId || panel.hidden || panel.classList.contains('hidden')) return;
 
           rows.push(...(data || []));
 
@@ -311,7 +311,7 @@
           });
         }
 
-        if (current !== requestId || panel.hidden) return;
+        if (current !== requestId || panel.hidden || panel.classList.contains('hidden')) return;
 
         const list = el('p80-products');
         list.replaceChildren();
@@ -352,7 +352,7 @@
           '. Графік: до 30 останніх активних днів.';
 
       } catch(error) {
-        if (current !== requestId || panel.hidden) return;
+        if (current !== requestId || panel.hidden || panel.classList.contains('hidden')) return;
 
         console.error('Analytics:',error);
 
@@ -376,7 +376,7 @@
     el('p80-refresh').addEventListener('click',load);
 
     new MutationObserver(() => {
-      if (!panel.hidden) {
+      if (!panel.hidden && !panel.classList.contains('hidden')) {
         load();
       } else {
         requestId++;
@@ -390,10 +390,10 @@
       }
     }).observe(panel,{
       attributes:true,
-      attributeFilter:['hidden']
+      attributeFilter:['hidden','class']
     });
 
-    if (!panel.hidden) load();
+    if (!panel.hidden && !panel.classList.contains('hidden')) load();
   }
 
   if (document.readyState === 'loading') {
