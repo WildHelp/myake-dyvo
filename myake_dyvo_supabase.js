@@ -109,16 +109,24 @@ window.closeDrawer = function() {
         : '+ У кошик';
   });
   }
-  function filteredProducts() {
-    const query = search.value.trim().toLocaleLowerCase('uk');
+    function filteredProducts() {
+    const query = search.value.trim();
 
-    return products.filter(p =>
-      (category === 'Усі' || p.category === category) &&
-      `${p.name} ${p.description || ''}`
+    return products.filter(p => {
+      if (category !== 'Усі' &&
+          p.category !== category) {
+        return false;
+      }
+
+      if (typeof window.p90MatchProduct === 'function') {
+        return window.p90MatchProduct(p, query);
+      }
+
+      return `${p.name} ${p.description || ''} ${p.category || ''}`
         .toLocaleLowerCase('uk')
-        .includes(query)
-    );
-  }
+        .includes(query.toLocaleLowerCase('uk'));
+    });
+    }
 
   function render() {
     const categories = [
@@ -340,7 +348,7 @@ window.getCheckoutItems = () => products
     try {
       const endpoint =
         `${SUPABASE_URL}/rest/v1/products` +
-        '?select=id,name,price,description,image_url,stock,category,is_published' +
+        '?select=id,name,price,description,image_url,stock,category,is_published,toy_custom' +
         '&is_published=eq.true&order=id.desc';
 
       const response = await fetch(endpoint, {
