@@ -366,7 +366,7 @@
     }
 
     async function load() {
-      if (loading || admin.hidden) return;
+      if (loading || admin.hidden || admin.classList.contains('hidden')) return;
       loading = true;
 
       $('p60-status').textContent = 'Завантаження статистики…';
@@ -412,7 +412,7 @@
     $('p60-refresh').onclick = load;
 
     const observer = new MutationObserver(() => {
-      if (!admin.hidden) {
+      if (!admin.hidden && !admin.classList.contains('hidden')) {
         load();
       } else {
         orders = [];
@@ -423,10 +423,10 @@
 
     observer.observe(admin,{
       attributes:true,
-      attributeFilter:['hidden']
+      attributeFilter:['hidden','class']
     });
 
-    if (!admin.hidden) load();
+    if (!admin.hidden && !admin.classList.contains('hidden')) load();
   };
 
   if (document.readyState === 'loading') {
