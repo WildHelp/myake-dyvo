@@ -91,7 +91,7 @@ def create_page(product):
         "url": canonical,
         "brand": {
             "@type": "Brand",
-            "name": "М'яке диво"
+            "name": "М’яке диво від Яни"
         },
         "offers": {
             "@type": "Offer",
@@ -127,6 +127,8 @@ def create_page(product):
 <title>{esc(name)} — М'яке диво від Яни</title>
 <meta name="description" content="{esc(description[:160])}">
 <meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="icon" type="image/png" sizes="192x192" href="https://wildhelp.github.io/myake-dyvo/favicon.png">
+<link rel="apple-touch-icon" href="https://wildhelp.github.io/myake-dyvo/apple-touch-icon.png">
 <link rel="canonical" href="{canonical}">
 <meta property="og:type" content="product">
 <meta property="og:title" content="{esc(name)}">
